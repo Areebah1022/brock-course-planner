@@ -3,8 +3,8 @@
 An agent that helps Brock University Computer Science students plan their courses:
 checking prerequisites, minimum grades, and what they're eligible to take next.
 
-> **Status: work in progress.** The data pipeline and prerequisite checker are done and
-> tested. The conversational agent layer is next.
+> **Status: work in progress.** The data pipeline, prerequisite checker, and conversational
+> agent are built and tested. Next up: major-specific prerequisites and an evaluation set.
 
 ## Why this exists
 
@@ -18,15 +18,19 @@ model guess at prerequisites.
 The model never decides whether a prerequisite is satisfied. Plain, tested Python does.
 
 ```
-Calendar HTML ──► parser.py ──► courses.json ──► tools.py ──► agent (next)
-                  (HTML →       (structured     (prereq       (decides which tool
-                   data)         requirements)   checking)     to call, explains results)
+Calendar HTML ──► parser.py ──► courses.json ──► tools.py ──► agent.py ◄──► Claude API
+                  (HTML →       (structured     (prereq       (agent loop:   (decides which
+                   data)         requirements)   checking)     runs tools)    tool to call)
 ```
 
 - **`planner/parser.py`**: parses Brock's calendar page into JSON. Prerequisites become an
   expression tree (AND / OR / minimum grades / credit counts) rather than text.
 - **`planner/tools.py`**: `get_course`, `search`, `check_prereqs`, `available_courses`.
   Results are three-valued: `met`, `not_met`, or `unknown`.
+- **`planner/agent.py`**: the agent loop. Claude reads the student's message and *asks* for tools
+  (`update_completed_courses`, `check_prereqs`, `get_course`, `search_courses`,
+  `available_courses`). The code runs them and sends the results back until Claude has an answer.
+  The student's completed courses live in Python, not in the model's memory.
 - **Honesty by design:** if a requirement can't be interpreted (for example "4U Mathematics credit" or
   rules that vary by major), the tool returns `unknown` and says why. It never claims a
   prerequisite is met when it can't tell.
@@ -41,16 +45,31 @@ pip install -r requirements.txt
 # 2. Parse it
 python -m planner.parser data/raw/cosc_2024.html -o data/courses.json
 
-# 3. Try the tools
-python - <<'PY'
+# 3. Add your API key: copy .env.example to .env and paste your key (never commit .env)
+#    Get a key at https://console.anthropic.com  (API usage is pay-as-you-go)
+
+# 4. Chat with the planner
+python -m planner.agent
+
+# 5. Run the tests (no API key needed; the agent tests use a fake Claude)
+pytest
+```
+
+Example session (illustrative; exact wording will vary):
+
+```
+You: I finished COSC 1P02 with 85, COSC 1P03 with 90, MATH 1P66 with 88 and MATH 1P67 with 80.
+     Can I take COSC 2P03?
+Planner: Yes, you meet every prerequisite for COSC 2P03. ...
+```
+
+Without an API key you can still use the tools directly:
+
+```python
 from planner.tools import Catalog
 catalog = Catalog.load()
-done = {"COSC 1P02": 85, "COSC 1P03": 90, "MATH 1P66": 88, "MATH 1P67": 80}
+done = {"COSC 1P03": 90, "MATH 1P66": 88, "MATH 1P67": 80}
 print(catalog.check_prereqs("COSC 2P03", done))
-PY
-
-# 4. Run the tests
-pytest
 ```
 
 ## Known limitations
@@ -71,7 +90,7 @@ pytest
 - [x] Prerequisite / minimum-grade checker with unit tests
 - [ ] Handle major-specific prerequisites
 - [ ] Parse program requirements (Honours, Co-op pattern)
-- [ ] Agent loop using the Claude API with tool use
+- [x] Agent loop using the Claude API with tool use
 - [ ] Evaluation set of real planning questions with expected answers
 - [ ] Support the current calendar format (calendar.brocku.ca)
 
