@@ -1,0 +1,11 @@
+# Secrets - never commit these
+.env
+
+# Raw copies of the calendar pages (Brock's content; re-download them yourself)
+data/raw/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
