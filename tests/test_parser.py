@@ -138,11 +138,11 @@ def test_unknown_phrase_is_kept_and_flagged(cal):
     assert p["expr"]["args"][1] == {"type": "other", "text": "4U Mathematics credit"}
 
 
-def test_major_specific_requirements_are_not_guessed(cal):
+def test_major_specific_requirements_become_program_variants(cal):
     p = cal["courses"]["TEST 3P06"]["prerequisites"]
-    assert p["parsed"] is False
-    assert p["expr"]["type"] == "other"
-
+    assert p["parsed"] is True
+    assert p["expr"]["op"] == "by_program"
+    assert [v["programs"] for v in p["expr"]["variants"]] == [["TEST"], ["GAME"]]
 
 def test_empty_requirement():
     assert parse_requirement("Prerequisite(s): ") is None

@@ -248,9 +248,10 @@ def test_real_data_apco_courses_no_longer_offered_to_a_cosc_student():
     # Not-yet-eligible courses are absent (needs COSC 2P03 first).
     assert "COSC 3P71" not in codes
     # Rules we can't fully resolve are flagged, never silently approved.
+    assert "COSC 2P13" not in codes  # needs COSC 2P03 first, so it's a clear "not yet"
     by_code = {c["code"]: c for c in out["courses"]}
-    assert by_code["COSC 2P13"]["overall"] == "check_required" and by_code["COSC 2P13"]["to_confirm"]
     assert by_code["COSC 2P03"]["overall"] == "eligible"
+    assert by_code["COSC 2P96"]["overall"] == "check_required"
 
 
 def test_real_data_non_coop_student_is_not_offered_work_terms():

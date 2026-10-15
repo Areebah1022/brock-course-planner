@@ -130,7 +130,7 @@ class Catalog:
 
         prereq = course["prerequisites"]
         if prereq:
-            status, reasons = evaluate(prereq["expr"], completed)
+            status, reasons = evaluate(prereq["expr"], completed, profile)
 
         if "-" in course["code"] and status == MET:
             # Placeholder codes like COSC 3V90-3V99: the calendar lists no prerequisites because the
@@ -253,10 +253,20 @@ def _credits_status(n, certain, possible, label):
     return NOT_MET, [f"Need {n:g} {label} credits (you have {certain:g})."]
 
 
-def evaluate(expr, completed):
+def evaluate(expr, completed, profile=None):
     """Evaluate a requirement tree. Returns (status, reasons)."""
+    if expr.get("op") == "by_program":
+        program = (profile or {}).get("program")
+        if not program:
+            return UNKNOWN, ["Prerequisites differ by program, and the student's program isn't set yet."]
+        for variant in expr["variants"]:
+            if program in variant["programs"]:
+                return evaluate(variant["expr"], completed, profile)
+        return UNKNOWN, [f"The calendar lists no prerequisite rule for {program} students. "
+                         "Confirm with an advisor."]
+
     if "op" in expr:
-        results = [evaluate(a, completed) for a in expr["args"]]
+        results = [evaluate(a, completed, profile) for a in expr["args"]]
         return _combine_and(results) if expr["op"] == "and" else _combine_or(results)
 
     kind = expr["type"]

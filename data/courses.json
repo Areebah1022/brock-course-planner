@@ -704,10 +704,50 @@
       "prerequisites": {
         "raw": "COSC 2P03 (minimum 60 percent) for COSC (single or combined), BCB, CAST, CNET and NEUR neurocomputing majors; COSC 2P03 (minimum 60 percent), CPCF 1F25 and IASC 2P04 for GAMP majors",
         "expr": {
-          "type": "other",
-          "text": "COSC 2P03 (minimum 60 percent) for COSC (single or combined), BCB, CAST, CNET and NEUR neurocomputing majors; COSC 2P03 (minimum 60 percent), CPCF 1F25 and IASC 2P04 for GAMP majors"
+          "op": "by_program",
+          "variants": [
+            {
+              "programs": [
+                "COSC",
+                "BCB",
+                "CAST",
+                "CNET",
+                "NEUR"
+              ],
+              "expr": {
+                "type": "course",
+                "code": "COSC 2P03",
+                "min_grade": 60
+              }
+            },
+            {
+              "programs": [
+                "GAMP"
+              ],
+              "expr": {
+                "op": "and",
+                "args": [
+                  {
+                    "type": "course",
+                    "code": "COSC 2P03",
+                    "min_grade": 60
+                  },
+                  {
+                    "type": "course",
+                    "code": "CPCF 1F25",
+                    "min_grade": null
+                  },
+                  {
+                    "type": "course",
+                    "code": "IASC 2P04",
+                    "min_grade": null
+                  }
+                ]
+              }
+            }
+          ]
         },
-        "parsed": false
+        "parsed": true
       },
       "corequisites": null,
       "restriction": null,

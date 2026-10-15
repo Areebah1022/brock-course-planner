@@ -181,16 +181,34 @@ def _parse_and(part: str):
     return leaves[0] if len(leaves) == 1 else {"op": "and", "args": leaves}
 
 
-def _parse_expr(text: str):
-    # Requirements that differ by major ("... for GAMP majors; ...") are out of scope.
-    if ";" in text or re.search(r"\bfor\b.*\bmajors\b", text):
-        raise Unparseable(text)
+def _parse_alternatives(text: str):
     # 'and' binds tighter than 'or':  A or B and C  ==  A or (B and C)
     branches = [_parse_and(p.strip()) for p in re.split(r"\s+or\s+", text)]
     return branches[0] if len(branches) == 1 else {"op": "or", "args": branches}
 
 
+def _parse_program_variants(text: str):
+    """'COSC 2P03 for COSC majors; COSC 2P03 and CPCF 1F25 for GAMP majors' ->
+    {"op": "by_program", "variants": [{"programs": ["COSC"], "expr": ...}, ...]}"""
+    variants = []
+    for clause in text.split(";"):
+        m = re.match(r"^(.+?)\s+for\s+(.+\bmajors)$", clause.strip(), re.I)
+        if not m:
+            raise Unparseable(clause)
+        variants.append({"programs": _program_codes(m.group(2)),
+                         "expr": _parse_alternatives(m.group(1))})
+    return {"op": "by_program", "variants": variants}
+
+
+def _parse_expr(text: str):
+    # Requirements that differ by major ("... for GAMP majors; ... for COSC majors")
+    if ";" in text or re.search(r"\bfor\b.*\bmajors\b", text):
+        return _parse_program_variants(text)
+    return _parse_alternatives(text)
+
 def has_unparsed(expr) -> bool:
+    if expr.get("op") == "by_program":
+        return any(has_unparsed(v["expr"]) for v in expr["variants"])
     if "op" in expr:
         return any(has_unparsed(a) for a in expr["args"])
     return expr["type"] == "other"
