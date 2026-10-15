@@ -26,10 +26,14 @@ Calendar HTML ──► parser.py ──► courses.json ──► tools.py ─�
 - **`planner/parser.py`**: parses Brock's calendar page into JSON. Prerequisites become an
   expression tree (AND / OR / minimum grades / credit counts) rather than text.
 - **`planner/tools.py`**: `get_course`, `search`, `check_prereqs`, `available_courses`.
-  Results are three-valued: `met`, `not_met`, or `unknown`.
+  Prerequisite results are three-valued: `met`, `not_met`, or `unknown`.
+- **Enrolment restrictions** ("not open to COSC majors", "Co-op students only", "minimum 75%
+  major average") are parsed too. Given the student's program and Co-op status, each course gets an
+  overall verdict: `eligible`, `not_eligible`, or `check_required`. Courses a student's program
+  can't take are hidden, and cross-listed duplicates (COSC 1P50 / APCO 1P50) are shown once.
 - **`planner/agent.py`**: the agent loop. Claude reads the student's message and *asks* for tools
   (`update_completed_courses`, `check_prereqs`, `get_course`, `search_courses`,
-  `available_courses`). The code runs them and sends the results back until Claude has an answer.
+  `available_courses`, `set_student_profile`). The code runs them and sends the results back until Claude has an answer.
   The student's completed courses live in Python, not in the model's memory.
 - **Honesty by design:** if a requirement can't be interpreted (for example "4U Mathematics credit" or
   rules that vary by major), the tool returns `unknown` and says why. It never claims a
@@ -80,6 +84,8 @@ print(catalog.check_prereqs("COSC 2P03", done))
   reference other subjects (MATH, STAT, ...) are still checked, but those courses can't be looked up.
 - **Prerequisites that vary by major are not interpreted** (e.g. COSC 2P13 lists different
   prerequisites for different majors). They are flagged `unknown`.
+- Restrictions that name extra conditions (a minimum average, overall credits, instructor
+  permission) are reported to the student as things to confirm; they are not verified.
 - Not every course runs every term; the timetable is not included.
 - Credit weights come from the course code letter (P = 0.5, F = 1.0, Q = 0.25, N = 0).
   The weights for `V` and `C` codes are assumptions; see `planner/parser.py`.
@@ -88,6 +94,7 @@ print(catalog.check_prereqs("COSC 2P03", done))
 
 - [x] Parse course descriptions, prerequisites, restrictions, cross-listings
 - [x] Prerequisite / minimum-grade checker with unit tests
+- [x] Program restrictions (who may enrol), Co-op-only courses, cross-listing de-duplication
 - [ ] Handle major-specific prerequisites
 - [ ] Parse program requirements (Honours, Co-op pattern)
 - [x] Agent loop using the Claude API with tool use

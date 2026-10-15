@@ -16,7 +16,79 @@ from planner.parser import credit_weight
 
 MET, NOT_MET, UNKNOWN = "met", "not_met", "unknown"
 
+# Restriction ("who may enrol") statuses
+ALLOWED, NOT_ALLOWED, CONDITIONAL, RESTR_UNKNOWN = "allowed", "not_allowed", "conditional", "unknown"
+# Overall verdict combining prerequisites + restriction
+ELIGIBLE, NOT_ELIGIBLE, CHECK_REQUIRED = "eligible", "not_eligible", "check_required"
+
 DEFAULT_DATA = Path(__file__).resolve().parent.parent / "data" / "courses.json"
+
+
+
+# --------------------------------------------------------------------------- restrictions
+
+def check_restriction(rule, profile):
+    """Apply a parsed restriction rule to a student profile.
+
+    profile: {"program": "COSC", "coop": True/False/None, "minors": ["APCO"]}  ({} = not set yet)
+    Returns {"status": allowed | not_allowed | conditional | unknown, "reasons": [...]}.
+    """
+    if not rule:
+        return {"status": ALLOWED, "reasons": []}
+
+    program = (profile or {}).get("program")
+    if not program:
+        return {"status": RESTR_UNKNOWN,
+                "reasons": [f"Restriction: \"{rule['raw']}\". Student's program isn't set yet."]}
+    if not rule["parsed"]:
+        return {"status": RESTR_UNKNOWN,
+                "reasons": [f"Could not interpret restriction automatically: \"{rule['raw']}\"."]}
+
+    coop = profile.get("coop")
+    minors = set(profile.get("minors") or [])
+
+    if program in rule["not_open_to"]:
+        return {"status": NOT_ALLOWED, "reasons": [f"Not open to {program} students."]}
+
+    has_open_list = bool(rule["open_to"] or rule["minors"])
+    if not has_open_list:
+        # Only an exclusion list, and the student isn't on it.
+        return {"status": ALLOWED, "reasons": []}
+
+    reasons = []
+    in_list = program in rule["open_to"] or bool(minors & set(rule["minors"]))
+    if in_list:
+        if rule["coop_only"]:
+            if coop is False:
+                return {"status": NOT_ALLOWED, "reasons": ["Open only to Co-op students."]}
+            if coop is None:
+                return {"status": RESTR_UNKNOWN, "reasons": ["Open only to Co-op students; Co-op status not set."]}
+        if rule["conditions"]:
+            return {"status": CONDITIONAL,
+                    "reasons": [f"Requires: {c}." for c in rule["conditions"]]}
+        return {"status": ALLOWED, "reasons": []}
+
+    # Not on the "open now" list.
+    if rule["later_open_to"] or rule["later_minors"]:
+        later = program in rule["later_open_to"] or bool(minors & set(rule["later_minors"]))
+        if later:
+            return {"status": CONDITIONAL,
+                    "reasons": ["Restricted to other programs until a date in the Registration guide; "
+                                "then open to your program."]}
+        return {"status": NOT_ALLOWED, "reasons": [f"Not open to {program} students."]}
+    if rule["date_limited"]:
+        return {"status": CONDITIONAL,
+                "reasons": ["Restricted to other programs until a date in the Registration guide; "
+                            "check whether it opens to your program afterwards."]}
+    return {"status": NOT_ALLOWED, "reasons": [f"Not open to {program} students."]}
+
+
+def overall_verdict(prereq_status, restriction_status):
+    if prereq_status == NOT_MET or restriction_status == NOT_ALLOWED:
+        return NOT_ELIGIBLE
+    if prereq_status == MET and restriction_status == ALLOWED:
+        return ELIGIBLE
+    return CHECK_REQUIRED
 
 
 # --------------------------------------------------------------------------- catalog
@@ -41,11 +113,16 @@ class Catalog:
                 if kw in (c["title"] or "").lower() or kw in (c["description"] or "").lower()]
         return hits[:limit]
 
-    def check_prereqs(self, code: str, completed: dict) -> dict:
-        """Can the student take this course given what they've completed?"""
+    def check_prereqs(self, code: str, completed: dict, profile: dict | None = None) -> dict:
+        """Can the student take this course? Checks prerequisites AND who may enrol.
+
+        `status` is about prerequisites only (met / not_met / unknown).
+        `restriction` is about the student's program (see check_restriction).
+        `overall` combines both: eligible / not_eligible / check_required.
+        """
         course = self.get_course(code)
         if course is None:
-            return {"code": normalize_code(code), "status": UNKNOWN,
+            return {"code": normalize_code(code), "status": UNKNOWN, "overall": CHECK_REQUIRED,
                     "reasons": [f"{normalize_code(code)} is not in the {self.calendar_year} calendar data."]}
 
         completed = {normalize_code(k): v for k, v in completed.items()}
@@ -55,34 +132,60 @@ class Catalog:
         if prereq:
             status, reasons = evaluate(prereq["expr"], completed)
 
-        coreq = course["corequisites"]
+        if "-" in course["code"] and status == MET:
+            # Placeholder codes like COSC 3V90-3V99: the calendar lists no prerequisites because the
+            # real ones depend on the specific topic offered. Don't turn "none listed" into a yes.
+            status = UNKNOWN
+            reasons = ["Special-topics course: prerequisites depend on the specific topic offered "
+                       "that term. Confirm with the department."]
+
+        restriction = check_restriction(course.get("restriction_rule"), profile)
+        restriction["text"] = course["restriction"]
+
         notes = []
+        coreq = course["corequisites"]
         if coreq:
             notes.append(f"Must be taken at the same time as (or after): {coreq['raw']}")
-        if course["restriction"]:
-            notes.append(f"Restriction (verify against your program): {course['restriction']}")
         notes.append("Not every course runs every term; check the timetable.")
 
         return {
             "code": course["code"],
             "title": course["title"],
+            "credits": course["credits"],
             "status": status,
             "reasons": reasons,
+            "restriction": restriction,
+            "overall": overall_verdict(status, restriction["status"]),
             "notes": notes,
             "calendar_year": self.calendar_year,
         }
 
-    def available_courses(self, completed: dict, subject: str | None = None):
-        """Courses the student is eligible for (or might be, if a grade/permission is unknown)."""
+    def available_courses(self, completed: dict, subject: str | None = None,
+                          profile: dict | None = None):
+        """Courses the student could take: prerequisites met (or unknown) and not excluded
+        by their program. Cross-listed duplicates (COSC 1P50 / APCO 1P50) are shown once."""
         done = {normalize_code(k) for k in completed}
-        out = []
+        results = []
         for course in self.courses.values():
             if course["code"] in done or (subject and course["subject"] != subject):
                 continue
-            result = self.check_prereqs(course["code"], completed)
-            if result["status"] in (MET, UNKNOWN):
-                out.append(result)
-        return out
+            result = self.check_prereqs(course["code"], completed, profile)
+            if result["overall"] != NOT_ELIGIBLE:
+                result["cross_listed"] = course["cross_listed"]
+                results.append(result)
+
+        # Collapse cross-listed duplicates, preferring the student's own program's code.
+        program = (profile or {}).get("program")
+        kept, seen = [], {}
+        for r in results:
+            group = frozenset([r["code"], *r["cross_listed"]])
+            overlap = next((g for g in seen if g & group), None)
+            if overlap is None:
+                seen[group] = len(kept)
+                kept.append(r)
+            elif r["code"].startswith((program or "") + " ") and program:
+                kept[seen[overlap]] = r
+        return kept
 
 
 def normalize_code(code: str) -> str:

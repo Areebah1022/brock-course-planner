@@ -4,6 +4,7 @@ import pytest
 
 from planner.parser import (
     credit_weight,
+    parse_restriction,
     extract_codes,
     parse_calendar_html,
     parse_requirement,
@@ -66,6 +67,12 @@ def test_cross_listing_inside_title(cal):
     c = cal["courses"]["TEST 3P01"]
     assert c["title"] == "Widget Algorithms"
     assert c["cross_listed"] == ["ALSO 3P01"]
+
+
+def test_section_headings_are_not_attached_to_the_previous_course(cal):
+    c = cal["courses"]["TEST 1P01"]
+    assert c["notes"] == []
+    assert c["format"] == "Lectures, 3 hours per week."
 
 
 def test_course_without_prereq(cal):
@@ -160,5 +167,51 @@ def test_real_calendar_known_facts():
     assert courses["COSC 2P08"]["cross_listed"] == ["DASA 2P08"]
     assert courses["COSC 2P08"]["description"].startswith("Introduction to Python")
 
+    # Section headings ("CO-OP COURSES") must not leak into course notes.
+    assert not [c["code"] for c in courses.values() for n in c["notes"] if n.isupper()]
+
     # Every course has a title and a description.
     assert all(c["title"] and c["description"] for c in courses.values())
+
+    # Every restriction in the real calendar is understood (none left for a human to decode).
+    assert all(c["restriction_rule"]["parsed"] for c in courses.values() if c["restriction"])
+    assert "COSC" in courses["COSC 2P03"]["restriction_rule"]["open_to"]
+    assert "COSC" in courses["APCO 1P00"]["restriction_rule"]["not_open_to"]
+    assert courses["COSC 0N01"]["restriction_rule"]["coop_only"] is True
+
+
+# ---- restriction parsing -----------------------------------------------------------------
+
+def test_restriction_open_to_codes_and_conditions():
+    r = parse_restriction("open to COSC (single or combined), BCB and CAST majors with a minimum of "
+                          "14.0 overall credits.")
+    assert r["open_to"] == ["COSC", "BCB", "CAST"]
+    assert r["conditions"] == ["at least 14.0 overall credits"]
+    assert r["parsed"]
+
+
+def test_restriction_not_open_to():
+    r = parse_restriction("not open to COSC (single or combined), BCB and DASA majors.")
+    assert r["not_open_to"] == ["COSC", "BCB", "DASA"] and r["open_to"] == []
+
+
+def test_restriction_coop_and_minors_and_dates():
+    assert parse_restriction("open to BCB and COSC Co-op students.")["coop_only"] is True
+    r = parse_restriction("open to STAC majors until date specified in Registration guide. "
+                          "After that date open to STAC majors and APCO minors.")
+    assert r["date_limited"] and r["later_open_to"] == ["STAC"] and r["later_minors"] == ["APCO"]
+
+
+def test_restriction_unrecognised_sentence_is_flagged():
+    assert parse_restriction("see the department chair.")["parsed"] is False
+
+
+def test_empty_restriction():
+    assert parse_restriction("") is None
+
+
+def test_course_entry_gets_restriction_rule(cal):
+    assert cal["courses"]["TEST 2P01"]["restriction_rule"]["open_to"] == ["TEST"]
+    assert cal["courses"]["TEST 1P01"]["restriction_rule"] is None
+    # the mislabelled 'restriction' that was moved to prerequisites must not leave a rule behind
+    assert cal["courses"]["TEST 4P01"]["restriction_rule"] is None

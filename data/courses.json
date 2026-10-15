@@ -13,6 +13,24 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors.",
+      "restriction_rule": {
+        "raw": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors",
+        "open_to": [],
+        "not_open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "DASA"
+        ],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "prior computer experience is not required. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -34,6 +52,24 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors.",
+      "restriction_rule": {
+        "raw": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors",
+        "open_to": [],
+        "not_open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "DASA"
+        ],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "some prior computer experience is preferred but not required. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -55,6 +91,27 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to IASC (single or combined) and GAMD majors until date specified in Registration guide. Not open to COSC (single or combined), BCB, CAST, CNET and DASA majors.",
+      "restriction_rule": {
+        "raw": "open to IASC (single or combined) and GAMD majors until date specified in Registration guide. Not open to COSC (single or combined), BCB, CAST, CNET and DASA majors",
+        "open_to": [
+          "IASC",
+          "GAMD"
+        ],
+        "not_open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "DASA"
+        ],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": true,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "enrolment limited to 60 students. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -76,6 +133,7 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course involves seminars and considerable written work. A good command of written and spoken English is required. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -115,6 +173,24 @@
       },
       "corequisites": null,
       "restriction": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors.",
+      "restriction_rule": {
+        "raw": "not open to COSC (single or combined), BCB, CAST, CNET and DASA majors",
+        "open_to": [],
+        "not_open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "DASA"
+        ],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -154,6 +230,20 @@
       },
       "corequisites": null,
       "restriction": "open to APCO minors until date specified in Registration guide.",
+      "restriction_rule": {
+        "raw": "open to APCO minors until date specified in Registration guide",
+        "open_to": [],
+        "not_open_to": [],
+        "minors": [
+          "APCO"
+        ],
+        "coop_only": false,
+        "date_limited": true,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in APCO 2P01."
@@ -205,6 +295,26 @@
       },
       "corequisites": null,
       "restriction": "open to STAC, VISA (single or combined) and VISA (Honours)/BEd (Intermediate/Senior) majors until date specified in Registration guide. After that date open to STAC, VISA (single or combined), VISA (Honours)/BEd (Intermediate/Senior) majors and APCO minors.",
+      "restriction_rule": {
+        "raw": "open to STAC, VISA (single or combined) and VISA (Honours)/BEd (Intermediate/Senior) majors until date specified in Registration guide. After that date open to STAC, VISA (single or combined), VISA (Honours)/BEd (Intermediate/Senior) majors and APCO minors",
+        "open_to": [
+          "STAC",
+          "VISA"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": true,
+        "later_open_to": [
+          "STAC",
+          "VISA"
+        ],
+        "later_minors": [
+          "APCO"
+        ],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will need additional materials, which they must supply. Field trips may be required. Students are expected to pay their own expenses. VISA 1P95 recommended. Due to space limitations, audits are not permitted in studio classes. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -255,6 +365,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -286,6 +397,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "students may propose their own projects for departmental approval or may apply for a project proposed by a faculty member. Further information (including project guidelines and project list) is available on the department Web pages. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -329,9 +441,9 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
-        "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
-        "COMPUTER SCIENCE COURSES"
+        "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
       "replaces": [],
       "cross_listed": [
@@ -352,6 +464,7 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -379,6 +492,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -398,6 +512,7 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course involves seminars and considerable written work. A good command of written and spoken English is required. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -420,6 +535,7 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -462,6 +578,25 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -489,6 +624,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 2P90 and 3P05."
@@ -520,6 +656,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [],
       "replaces": [],
       "cross_listed": [
@@ -547,6 +684,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -573,6 +711,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -620,6 +759,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -665,6 +805,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "students should select the lab appropriate for their application domain (Computer Science or Mathematics). This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -691,6 +832,23 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), IASC (single or combined), STAC, VISA (single or combined) and VISA (Honours)/BEd (Intermediate/Senior) majors until date specified in Registration guide.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), IASC (single or combined), STAC, VISA (single or combined) and VISA (Honours)/BEd (Intermediate/Senior) majors until date specified in Registration guide",
+        "open_to": [
+          "COSC",
+          "IASC",
+          "STAC",
+          "VISA"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": true,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will need additional materials and equipment, which they must supply. Field trips may be required. Students are expected to pay their own expenses. VISA 1P95 recommended. Due to space limitations, audits are not permitted in studio classes. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in IASC 2P96."
@@ -734,6 +892,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -761,6 +920,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -788,6 +948,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 2P32."
@@ -818,6 +979,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -845,6 +1007,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -871,6 +1034,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 3P40."
@@ -901,6 +1065,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -928,6 +1093,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -971,6 +1137,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1011,6 +1178,24 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, GAMP, and NEUR majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, GAMP, and NEUR majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1036,6 +1221,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1073,6 +1259,23 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST and CNET majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST and CNET majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 3V97."
@@ -1119,6 +1322,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1146,6 +1350,29 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors with a minimum 75 percent major average (or permission of project supervisor) and permission of project coordinator.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors with a minimum 75 percent major average (or permission of project supervisor) and permission of project coordinator",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [
+          "major average of at least 75%",
+          "permission of project supervisor",
+          "permission of project coordinator"
+        ],
+        "parsed": true
+      },
       "notes": [
         "students may propose their own projects for departmental approval or may apply for a project proposed by a faculty member. Further information (including project guidelines and project list) is available on the department Web pages. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1182,6 +1409,22 @@
       },
       "corequisites": null,
       "restriction": "open to GAMP majors and permission of the Game Program Director.",
+      "restriction_rule": {
+        "raw": "open to GAMP majors and permission of the Game Program Director",
+        "open_to": [
+          "GAMP"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [
+          "permission of Game Program Director"
+        ],
+        "parsed": true
+      },
       "notes": [
         "application required. Enrolment will be limited to the number of placements available. Students will be required to attend orientation meetings, occasional meetings with the Student Support Co-ordinator and develop professional learning objectives. Additional components typically include a site visit, a work term report and an employer performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1201,6 +1444,25 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1226,6 +1488,27 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST and CNET majors with a minimum 75 percent major average, a minimum 10.0 overall credits and permission of project co-ordinator.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST and CNET majors with a minimum 75 percent major average, a minimum 10.0 overall credits and permission of project co-ordinator",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [
+          "major average of at least 75%",
+          "at least 10.0 overall credits",
+          "permission of project co-ordinator"
+        ],
+        "parsed": true
+      },
       "notes": [
         "students may propose their own projects for departmental approval or may apply for a project proposed by a faculty member. This course is strongly recommended for students considering graduate school. Students must consult with faculty at the end of year 3 regarding supervision of projects. Further information (including project guidelines and project list) is available on the department Web pages. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1263,6 +1546,24 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB and CAST majors with a minimum of 14.0 overall credits.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB and CAST majors with a minimum of 14.0 overall credits",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [
+          "at least 14.0 overall credits"
+        ],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 4F00."
@@ -1293,6 +1594,22 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB and CAST majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB and CAST majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 4F00."
@@ -1323,6 +1640,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1350,6 +1668,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple mods of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1377,6 +1696,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1404,6 +1724,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1431,6 +1752,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1459,6 +1781,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1497,6 +1820,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1525,6 +1849,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1561,6 +1886,25 @@
       },
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors.",
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "MATH students may take this course with permission of the Mathematics Department. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1590,6 +1934,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "PHYS 1P91 and 1P92 are recommended. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1617,6 +1962,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1644,6 +1990,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1671,6 +2018,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1698,6 +2046,22 @@
       },
       "corequisites": null,
       "restriction": "open to COSC single or combined, GAME, NEUR, and Data Science programs.",
+      "restriction_rule": {
+        "raw": "open to COSC single or combined, GAME, NEUR, and Data Science programs",
+        "open_to": [
+          "COSC",
+          "GAME",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1740,6 +2104,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple mods of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1767,6 +2132,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term.",
         "Completion of this course will replace previous assigned grade and credit obtained in COSC 4V96."
@@ -1800,6 +2166,7 @@
       },
       "corequisites": null,
       "restriction": null,
+      "restriction_rule": null,
       "notes": [
         "this course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1819,9 +2186,26 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors.",
-      "notes": [
-        "CO-OP COURSES"
-      ],
+      "restriction_rule": {
+        "raw": "open to COSC (single or combined), BCB, CAST, CNET, GAMP and NEUR Neurocomputing stream majors",
+        "open_to": [
+          "COSC",
+          "BCB",
+          "CAST",
+          "CNET",
+          "GAMP",
+          "NEUR"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": false,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
+      "notes": [],
       "replaces": [],
       "cross_listed": [],
       "cross_list_marker": null,
@@ -1838,6 +2222,21 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC and BCB Co-op students.",
+      "restriction_rule": {
+        "raw": "open to COSC and BCB Co-op students",
+        "open_to": [
+          "COSC",
+          "BCB"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1855,6 +2254,21 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC and BCB Co-op students.",
+      "restriction_rule": {
+        "raw": "open to COSC and BCB Co-op students",
+        "open_to": [
+          "COSC",
+          "BCB"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1872,6 +2286,21 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC and BCB Co-op students.",
+      "restriction_rule": {
+        "raw": "open to COSC and BCB Co-op students",
+        "open_to": [
+          "COSC",
+          "BCB"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1889,6 +2318,21 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC and BCB Co-op students.",
+      "restriction_rule": {
+        "raw": "open to COSC and BCB Co-op students",
+        "open_to": [
+          "COSC",
+          "BCB"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1906,6 +2350,21 @@
       "prerequisites": null,
       "corequisites": null,
       "restriction": "open to COSC and BCB Co-op students.",
+      "restriction_rule": {
+        "raw": "open to COSC and BCB Co-op students",
+        "open_to": [
+          "COSC",
+          "BCB"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [],
       "replaces": [],
       "cross_listed": [],
@@ -1939,6 +2398,22 @@
         "parsed": true
       },
       "restriction": "open to BCB, COSC and CNET Co-op students.",
+      "restriction_rule": {
+        "raw": "open to BCB, COSC and CNET Co-op students",
+        "open_to": [
+          "BCB",
+          "COSC",
+          "CNET"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will be required to prepare learning objectives, participate in a site visit, write a work term report and receive a successful work term performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -1974,6 +2449,21 @@
         "parsed": true
       },
       "restriction": "open to BCB and COSC Co-op students.",
+      "restriction_rule": {
+        "raw": "open to BCB and COSC Co-op students",
+        "open_to": [
+          "BCB",
+          "COSC"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will be required to prepare learning objectives, participate in a site visit, write a work term report and receive a successful work term performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -2009,6 +2499,21 @@
         "parsed": true
       },
       "restriction": "open to BCB and COSC Co-op students.",
+      "restriction_rule": {
+        "raw": "open to BCB and COSC Co-op students",
+        "open_to": [
+          "BCB",
+          "COSC"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will be required to prepare learning objectives, participate in a site visit, write a work term report and receive a successful work term performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -2044,6 +2549,21 @@
         "parsed": true
       },
       "restriction": "open to BCB and COSC Co-op students.",
+      "restriction_rule": {
+        "raw": "open to BCB and COSC Co-op students",
+        "open_to": [
+          "BCB",
+          "COSC"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will be required to prepare learning objectives, participate in a site visit, write a work term report and receive a successful work term performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],
@@ -2079,6 +2599,21 @@
         "parsed": true
       },
       "restriction": "open to BCB and COSC Co-op students.",
+      "restriction_rule": {
+        "raw": "open to BCB and COSC Co-op students",
+        "open_to": [
+          "BCB",
+          "COSC"
+        ],
+        "not_open_to": [],
+        "minors": [],
+        "coop_only": true,
+        "date_limited": false,
+        "later_open_to": [],
+        "later_minors": [],
+        "conditions": [],
+        "parsed": true
+      },
       "notes": [
         "students will be required to prepare learning objectives, participate in a site visit, write a work term report and receive a successful work term performance evaluation. This course may be offered in multiple modes of delivery. The method of delivery will be listed on the academic timetable, in the applicable term."
       ],

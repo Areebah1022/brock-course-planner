@@ -17,6 +17,7 @@ Run it:
 
 import json
 import os
+import re
 import sys
 
 try:  # Load ANTHROPIC_API_KEY from a local .env file if python-dotenv is installed.
@@ -39,21 +40,47 @@ You are a course-planning assistant for Brock University Computer Science studen
 Rules:
 - You know NOTHING about Brock's courses from memory. Use the tools for every fact about a
   course, prerequisite, or eligibility. Never guess or invent course codes, prerequisites or grades.
+- Before you say what a student can take, you need their PROGRAM and whether they are in CO-OP.
+  If you don't have them, ask. Record them with set_student_profile. Computer Science majors use
+  the program code COSC; for any other program, ask for the 3-4 letter code used in the calendar.
 - When a student mentions courses they've finished (and grades if they give them), record them
   with update_completed_courses before checking anything. If a grade matters (a prerequisite has
   a minimum percentage) and you don't have it, ask for it.
-- check_prereqs returns "met", "not_met" or "unknown". Report "unknown" honestly and explain why
-  (for example: the rule varies by major, needs instructor permission, or couldn't be interpreted).
-  Never turn "unknown" into a yes.
+- Tool results give an "overall" verdict: "eligible", "not_eligible" or "check_required".
+  "check_required" means something could not be confirmed automatically (an unknown grade, a rule
+  that varies by major, an instructor permission, a condition such as a minimum average). Explain
+  the specific reason. Never turn "check_required" into a yes.
+- Courses the student's program cannot take are already removed from available_courses. Mention
+  that this was done; don't list excluded courses unless the student asks about one directly.
+- Courses with 0 credits and codes like COSC 0N01 are Co-op work terms that follow the program's
+  Co-op sequence. Mention them in one line instead of listing them like regular electives.
 - The data covers only COSC and APCO courses from one calendar year (stated below). Other subjects,
   program requirements, and the term timetable are NOT included. Say so when relevant.
 - Always remind the student to confirm their plan with an academic advisor before registering.
-- Be concise and friendly. Use short lists for multi-course answers.
+- Your replies appear in a plain-text terminal: do NOT use markdown (no **bold**, no # headings).
+  Use plain sentences and simple "- " lists. Be concise and friendly.
 """
 
 # Each tool is described to Claude with a name, a plain-English description, and a JSON schema
 # for its inputs. Claude reads these descriptions to decide when to use each tool.
 TOOLS = [
+    {
+        "name": "set_student_profile",
+        "description": (
+            "Record the student's program and Co-op status. Course restrictions ('open to COSC "
+            "majors', 'Co-op students only') depend on this. Only the fields you pass are updated."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "program": {"type": "string",
+                            "description": "3-4 letter program code from the calendar, e.g. 'COSC'"},
+                "coop": {"type": "boolean", "description": "True if the student is in a Co-op program"},
+                "minors": {"type": "array", "items": {"type": "string"},
+                           "description": "Minor program codes, if any"},
+            },
+        },
+    },
     {
         "name": "update_completed_courses",
         "description": (
@@ -83,8 +110,9 @@ TOOLS = [
         "name": "check_prereqs",
         "description": (
             "Check whether the student can take a course, based on their recorded completed "
-            "courses. Returns status (met / not_met / unknown), the reasons, and notes about "
-            "restrictions and corequisites."
+            "courses and program. Returns prerequisite status (met / not_met / unknown), the "
+            "restriction check (is the course open to their program?), an overall verdict "
+            "(eligible / not_eligible / check_required), reasons, and notes."
         ),
         "input_schema": {
             "type": "object",
@@ -113,8 +141,9 @@ TOOLS = [
     {
         "name": "available_courses",
         "description": (
-            "List courses the student is eligible for now, or might be (status 'unknown'), "
-            "given their recorded completed courses. Optionally filter by subject, e.g. 'COSC'."
+            "List courses the student can take now, or might (overall 'check_required'), given "
+            "their completed courses and program. Courses their program cannot take are removed. "
+            "Optionally filter by subject, e.g. 'COSC'."
         ),
         "input_schema": {
             "type": "object",
@@ -143,8 +172,23 @@ def _compact_course(course: dict) -> dict:
     }
 
 
-def execute_tool(name: str, args: dict, catalog: Catalog, completed: dict):
+def execute_tool(name: str, args: dict, catalog: Catalog, completed: dict, profile: dict | None = None):
     """Run one tool and return a JSON-serialisable result. Raises on bad input."""
+    if profile is None:
+        profile = {}
+
+    if name == "set_student_profile":
+        if "program" in args:
+            program = str(args["program"]).strip().upper()
+            if not re.fullmatch(r"[A-Z]{3,4}", program):
+                raise ValueError("program must be the calendar's 3-4 letter code, e.g. COSC")
+            profile["program"] = program
+        if "coop" in args:
+            profile["coop"] = bool(args["coop"])
+        if "minors" in args:
+            profile["minors"] = [str(m).strip().upper() for m in args["minors"]]
+        return {"profile": dict(profile)}
+
     if name == "update_completed_courses":
         for item in args["courses"]:
             code = normalize_code(item["code"])
@@ -157,7 +201,7 @@ def execute_tool(name: str, args: dict, catalog: Catalog, completed: dict):
         return {"completed_courses": dict(completed)}
 
     if name == "check_prereqs":
-        return catalog.check_prereqs(args["code"], completed)
+        return catalog.check_prereqs(args["code"], completed, profile)
 
     if name == "get_course":
         course = catalog.get_course(args["code"])
@@ -171,11 +215,18 @@ def execute_tool(name: str, args: dict, catalog: Catalog, completed: dict):
                              "summary": (c["description"] or "")[:160]} for c in hits]}
 
     if name == "available_courses":
-        results = catalog.available_courses(completed, subject=args.get("subject"))
-        return {"count": len(results),
-                "courses": [{"code": r["code"], "title": r["title"], "status": r["status"],
-                             "reasons": r["reasons"] if r["status"] == "unknown" else []}
-                            for r in results]}
+        results = catalog.available_courses(completed, subject=args.get("subject"), profile=profile)
+        out = []
+        for r in results:
+            to_confirm = []
+            if r["status"] != "met":
+                to_confirm += r["reasons"]
+            if r["restriction"]["status"] != "allowed":
+                to_confirm += r["restriction"]["reasons"]
+            out.append({"code": r["code"], "title": r["title"], "credits": r["credits"],
+                        "overall": r["overall"], "to_confirm": to_confirm,
+                        "also_offered_as": r["cross_listed"]})
+        return {"student_program": profile.get("program"), "count": len(out), "courses": out}
 
     raise ValueError(f"Unknown tool: {name}")
 
@@ -196,6 +247,7 @@ class Agent:
         self.system = SYSTEM_PROMPT + f"\nData source: Brock {catalog.calendar_year} undergraduate calendar."
         self.messages: list = []     # the conversation so far
         self.completed: dict = {}    # the student's finished courses: {"COSC 1P03": 82.0}
+        self.profile: dict = {}      # {"program": "COSC", "coop": True, "minors": []}
         self.tokens = {"input": 0, "output": 0}
 
     def chat(self, user_text: str) -> str:
@@ -231,7 +283,7 @@ class Agent:
             results = []
             for call in tool_calls:
                 try:
-                    output = execute_tool(call.name, call.input, self.catalog, self.completed)
+                    output = execute_tool(call.name, call.input, self.catalog, self.completed, self.profile)
                     results.append({"type": "tool_result", "tool_use_id": call.id,
                                     "content": json.dumps(output, ensure_ascii=False)})
                 except Exception as exc:  # tell Claude what went wrong so it can recover

@@ -181,3 +181,80 @@ def test_token_usage_is_tracked(catalog):
 def test_truncated_answer_is_flagged(catalog):
     agent = Agent(catalog, client=FakeClient(reply(text("partial"), stop="max_tokens")))
     assert "cut off" in agent.chat("long question")
+
+
+# ---- student profile (program / co-op) -------------------------------------------------
+
+def test_set_student_profile_merges_and_normalises(catalog):
+    profile = {}
+    execute_tool("set_student_profile", {"program": "cosc", "coop": True}, catalog, {}, profile)
+    assert profile == {"program": "COSC", "coop": True}
+    out = execute_tool("set_student_profile", {"minors": ["apco"]}, catalog, {}, profile)
+    assert out["profile"] == {"program": "COSC", "coop": True, "minors": ["APCO"]}  # earlier fields kept
+
+
+def test_set_student_profile_rejects_a_program_name_instead_of_a_code(catalog):
+    with pytest.raises(ValueError):
+        execute_tool("set_student_profile", {"program": "Computer Science"}, catalog, {}, {})
+
+
+def test_available_courses_tool_respects_profile(catalog):
+    done = {"TEST 1P01": 75.0, "MATH 1P66": 70.0, "MATH 1P67": 65.0}
+    mine = execute_tool("available_courses", {}, catalog, done, {"program": "TEST", "coop": False})
+    other = execute_tool("available_courses", {}, catalog, done, {"program": "ARTS", "coop": False})
+    assert "TEST 2P01" in {c["code"] for c in mine["courses"]}
+    assert "TEST 2P01" not in {c["code"] for c in other["courses"]}
+    assert mine["student_program"] == "TEST"
+
+
+def test_agent_keeps_profile_in_python_state(catalog):
+    client = FakeClient(
+        reply(tool_call("p1", "set_student_profile", program="TEST", coop=False), stop="tool_use"),
+        reply(tool_call("p2", "available_courses"), stop="tool_use"),
+        reply(text("Here you go.")),
+    )
+    agent = Agent(catalog, client=client)
+    agent.chat("I'm a TEST major, not in co-op. What can I take?")
+    assert agent.profile == {"program": "TEST", "coop": False}
+    result = json.loads(client.requests[2]["messages"][-1]["content"][0]["content"])
+    assert result["student_program"] == "TEST"
+
+
+def test_system_prompt_asks_for_program_and_forbids_markdown(catalog):
+    client = FakeClient(reply(text("hi")))
+    Agent(catalog, client=client).chat("hello")
+    system = client.requests[0]["system"]
+    assert "PROGRAM" in system and "do NOT use markdown" in system
+
+
+# ---- regression: the exact scenario from the first real run ----------------------------
+
+def test_real_data_apco_courses_no_longer_offered_to_a_cosc_student():
+    real = Catalog.load()
+    done = {"COSC 1P02": 85.0, "COSC 1P03": 90.0, "MATH 1P66": 88.0, "MATH 1P67": 80.0}
+    profile = {}
+    execute_tool("set_student_profile", {"program": "COSC", "coop": True}, real, done, profile)
+    out = execute_tool("available_courses", {}, real, done, profile)
+    codes = {c["code"] for c in out["courses"]}
+
+    # APCO courses that are "not open to COSC majors" must be gone; duplicates collapsed.
+    assert not codes & {"APCO 1P00", "APCO 1P01", "APCO 1P30", "APCO 1P50", "APCO 2P89", "APCO 1P93", "APCO 2P61"}
+    assert "COSC 1P50" in codes and "APCO 1P50" not in codes
+    # Real options remain.
+    assert {"COSC 2P03", "COSC 2P08", "COSC 1P71"} <= codes
+    # Special-topics placeholders (3V90-3V99, 4V80-4V99) are flagged, not called "eligible".
+    for topics in ("COSC 3V90-3V99", "COSC 4V80-4V99"):
+        assert {c["code"]: c for c in out["courses"]}[topics]["overall"] == "check_required"
+    # Not-yet-eligible courses are absent (needs COSC 2P03 first).
+    assert "COSC 3P71" not in codes
+    # Rules we can't fully resolve are flagged, never silently approved.
+    by_code = {c["code"]: c for c in out["courses"]}
+    assert by_code["COSC 2P13"]["overall"] == "check_required" and by_code["COSC 2P13"]["to_confirm"]
+    assert by_code["COSC 2P03"]["overall"] == "eligible"
+
+
+def test_real_data_non_coop_student_is_not_offered_work_terms():
+    real = Catalog.load()
+    out = execute_tool("available_courses", {}, real, {"COSC 1P03": 80.0},
+                       {"program": "COSC", "coop": False})
+    assert not [c for c in out["courses"] if c["code"].startswith(("COSC 0N", "COSC 2C"))]

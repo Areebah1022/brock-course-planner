@@ -211,6 +211,78 @@ def parse_requirement(raw: str):
     return {"raw": text, "expr": expr, "parsed": not has_unparsed(expr)}
 
 
+
+# --------------------------------------------------------------------------- restrictions
+#
+# A restriction says WHO may enrol ("open to COSC and BCB Co-op students"). It is parsed into:
+#   {"raw": str, "open_to": ["COSC", ...], "not_open_to": [...], "minors": ["APCO"],
+#    "coop_only": bool, "date_limited": bool, "later_open_to": [...], "later_minors": [...],
+#    "conditions": ["major average of at least 75%", ...], "parsed": bool}
+
+_PROGRAM_CODE = re.compile(r"\b[A-Z]{3,4}\b")
+_MINOR = re.compile(r"\b([A-Z]{3,4})\s+minors?\b")
+_PERMISSION = re.compile(
+    r"permission of (?:the )?([A-Za-z][A-Za-z\- ]*?)(?=\s*(?:[,.;)]|$|\band\b|\buntil\b))")
+
+
+def _program_codes(text: str) -> list[str]:
+    return list(dict.fromkeys(_PROGRAM_CODE.findall(text)))
+
+
+def _split_programs_and_minors(body: str):
+    minors = list(dict.fromkeys(_MINOR.findall(body)))
+    programs = [c for c in _program_codes(body) if c not in minors]
+    return programs, minors
+
+
+def _restriction_conditions(text: str) -> list[str]:
+    conditions = []
+    for m in re.finditer(r"minimum (?:of )?(\d+(?:\.\d+)?) percent major average", text):
+        conditions.append(f"major average of at least {m.group(1)}%")
+    for m in re.finditer(r"minimum (?:of )?(\d+(?:\.\d+)?) overall credits", text):
+        conditions.append(f"at least {m.group(1)} overall credits")
+    for m in _PERMISSION.finditer(text):
+        conditions.append(f"permission of {m.group(1).strip()}")
+    return list(dict.fromkeys(conditions))
+
+
+def parse_restriction(raw: str):
+    """Parse 'open to COSC and BCB Co-op students.' etc. into a rule dict (or None if empty)."""
+    text = normalize(raw or "").rstrip(".").strip()
+    if not text:
+        return None
+
+    rule = {"raw": text, "open_to": [], "not_open_to": [], "minors": [], "coop_only": False,
+            "date_limited": "until date specified" in text, "later_open_to": [], "later_minors": [],
+            "conditions": _restriction_conditions(text), "parsed": True}
+
+    for sentence in re.split(r"(?<=\.)\s+(?=[A-Za-z])", text + "."):
+        sentence = sentence.strip().rstrip(".")
+        if not sentence:
+            continue
+        not_open = re.search(r"\bnot open to (.+)", sentence, re.I)
+        later = re.match(r"after that date,? open to (.+)", sentence, re.I)
+        now = re.search(r"\bopen to (.+)", sentence, re.I)
+
+        if not_open:
+            rule["not_open_to"] += _program_codes(not_open.group(1))
+        elif later:
+            programs, minors = _split_programs_and_minors(later.group(1))
+            rule["later_open_to"] += programs
+            rule["later_minors"] += minors
+        elif now:
+            body = now.group(1)
+            programs, minors = _split_programs_and_minors(body)
+            rule["open_to"] += programs
+            rule["minors"] += minors
+            if re.search(r"\bco-op students\b", body, re.I):
+                rule["coop_only"] = True
+        else:
+            rule["parsed"] = False  # a sentence we don't recognise
+
+    return rule
+
+
 # --------------------------------------------------------------------------- page parsing
 
 def _parse_entry(code_p, body) -> dict:
@@ -232,6 +304,7 @@ def _parse_entry(code_p, body) -> dict:
         "prerequisites": None,
         "corequisites": None,
         "restriction": None,
+        "restriction_rule": None,
         "notes": [],
         "replaces": [],
         "cross_listed": [],
@@ -285,6 +358,7 @@ def _parse_entry(code_p, body) -> dict:
         )
         course["restriction"] = None
 
+    course["restriction_rule"] = parse_restriction(course["restriction"]) if course["restriction"] else None
     return course
 
 
@@ -302,7 +376,9 @@ def parse_calendar_html(html: str) -> dict:
         for sib in code_p.next_siblings:
             if getattr(sib, "name", None) is None:
                 continue  # whitespace between tags
-            if sib.name != "p" or "calccode" in sib.get("class", []):
+            classes = sib.get("class", [])
+            # A new course, or a section heading such as "CO-OP COURSES", ends this entry.
+            if sib.name != "p" or "calccode" in classes or "courseheading" in classes:
                 break
             body.append(sib)
         course = _parse_entry(code_p, body)

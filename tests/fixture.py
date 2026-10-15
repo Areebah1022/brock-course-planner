@@ -6,6 +6,7 @@ FIXTURE_HTML = """
 <p class="calcname">Intro Widgets</p>
 <p class="calnormal">Learn about widgets.</p>
 <p class="calitalic">Lectures, 3 hours per week.</p>
+<p class="courseheading">INTERMEDIATE COURSES</p>
 
 <p class="calccode"><a name="TEST_2P01">#TEST 2P01</a></p>
 <p class="calcname">Advanced Widgets</p>
